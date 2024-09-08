@@ -1,13 +1,17 @@
 const express = require('express');
-const fs = require('fs')
+const fs = require('fs');
 const path = require('path');
 
 const app = express();
 
 const PORT = 8001;
 
+app.get('/', (req, res) => {
+  res.send('hello');
+});
+
 app.get('/api/file', (req, res) => {
-  const filePath = path.join(__dirname, 'Results.csv');
+  const filePath = path.join(__dirname, 'datasets', 'Results.csv');
   res.sendFile(filePath, (err) => {
     if (err) {
       res.status(err.status).end();
@@ -16,7 +20,7 @@ app.get('/api/file', (req, res) => {
 });
 
 app.get('/api/metadata', (req, res) => {
-  const filePath = path.join(__dirname, 'Results.csv');
+  const filePath = path.join(__dirname, 'datasets', 'Results.csv');
 
   const metadata = {
     fileName: 'Results.csv',
@@ -26,7 +30,7 @@ app.get('/api/metadata', (req, res) => {
     updatedAt: fs.statSync(filePath).mtime,
   };
 
-  res.json(metadata);
+  res.json(JSON.stringify(metadata));
 });
 
 app.listen(PORT, () => {
